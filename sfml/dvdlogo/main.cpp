@@ -14,13 +14,13 @@ int main()
     window.setFramerateLimit(60);
 
     sf::Texture rocketTexture;
-    rocketTexture.loadFromFile("./rocket.png");
+    rocketTexture.loadFromFile("./camera.png");
 
     sf::Sprite rocket(rocketTexture);
 
     sf::Vector2u size = rocketTexture.getSize();
     rocket.setOrigin(size.x / 2, size.y / 2);
-    sf::Vector2f increment(0.4f, 0.4f);
+    sf::Vector2f increment(5.0f, 10.0f);
 
     
 
@@ -51,24 +51,34 @@ int main()
                 window.close();
         }
 
-        if((rocket.getPosition().x + (size.x / 2) >
-             window.getSize().x && increment.x > 0) ||
-            (rocket.getPosition().x - (size.x / 2) < 0 &&
-            increment.x < 0))
+        if((rocket.getPosition().x + (size.x / 2) > window.getSize().x && increment.x > 0))
                 {
                 // Reverse the direction on X axis.
                 increment.x = -increment.x;
+                rocket.setColor(sf::Color::Green);
                 }
+        if((rocket.getPosition().x - (size.x /2) < 0 && increment.x < 0))
+        {
+                increment.x = -increment.x;
+                rocket.setColor(sf::Color::Red);
 
-        if((rocket.getPosition().y + (size.y / 2) >
-            window.getSize().y && increment.y > 0) ||
-            (rocket.getPosition().y - (size.y / 2) < 0 && increment.y < 0))
+        }
+
+        if((rocket.getPosition().y + (size.y / 2) > window.getSize().y && increment.y > 0))
                 {
                 // Reverse the direction on Y axis.
                 increment.y = -increment.y;
+                rocket.setColor(sf::Color::Blue);
                 }
+        if(rocket.getPosition().y - (size.y /2) < 0 && increment.y < 0)
+        {
+                increment.y = -increment.y;
+                rocket.setColor(sf::Color::Yellow);
+
+        }
 
         rocket.setPosition(rocket.getPosition() + increment);
+
 
 
         /* window.clear(sf::Color::White); */
