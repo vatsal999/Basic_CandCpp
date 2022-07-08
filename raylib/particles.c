@@ -1,12 +1,14 @@
+//TODO: refactor 
+
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
 const long int NUMPARTICLES = 200000;
-const int WIDTH = 800;
-const int HEIGHT = 700;
-const float friction = 0.1;
+const int WIDTH = 1000;
+const int HEIGHT = 1000;
+const float friction = 0.1f;
 
 typedef struct Particle {
     Vector2 pos;
@@ -25,11 +27,13 @@ int main(void)
         particles[i].pos.y = GetRandomValue(0, HEIGHT-1);
         particles[i].vel.x = 0;
         particles[i].vel.y = 0;
+        particles[i].acc.x = 0;
+        particles[i].acc.y = 0;
 
     }
 
     InitWindow(WIDTH, HEIGHT, "1MPARTICLE");
-    /* SetTargetFPS(60); */
+    SetTargetFPS(60);
     /* Particle *particles = (Particle*)malloc(NUMPARTICLES * sizeof(Particle)); */
 
 
@@ -37,23 +41,32 @@ int main(void)
     {
 
         /* Vector2 GetMousePosition; */
-        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+        /* if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){ */
+        /*     for( long int z = 0; z < NUMPARTICLES; z++){ */
+        /*         particles[z].r1.x = GetMouseX() - particles[z].pos.x; */
+        /*         particles[z].r1.y = GetMouseY() - particles[z].pos.y; */
+        /*         float modr1 = sqrt(particles[z].r1.x*particles[z].r1.x + particles[z].r1.y*particles[z].r1.y); */
+        /*         particles[z].acc.x = (0.1/modr1)*particles[z].r1.x; */
+        /*         particles[z].acc.y = (0.1/modr1)*particles[z].r1.y; */
+        /*     } */
+        /* } */
             for( long int z = 0; z < NUMPARTICLES; z++){
                 particles[z].r1.x = GetMouseX() - particles[z].pos.x;
                 particles[z].r1.y = GetMouseY() - particles[z].pos.y;
                 float modr1 = sqrt(particles[z].r1.x*particles[z].r1.x + particles[z].r1.y*particles[z].r1.y);
-                particles[z].vel.x = (2/modr1)*particles[z].r1.x;
-                particles[z].vel.y = (2/modr1)*particles[z].r1.y;
+                particles[z].acc.x = (0.01/modr1)*particles[z].r1.x;
+                particles[z].acc.y = (0.01/modr1)*particles[z].r1.y;
+                /* if(particles[z].r1.x < 1) particles[z].acc.x = 0; */
+                /* if(particles[z].r1.y < 1) particles[z].acc.y = 0; */
             }
-        }
 
         for(long  int j = 0; j < NUMPARTICLES; j++ ){
 
-            /* particles[j].vel.x = particles[j].vel.x + particles[j].acc.x; */
-            /* particles[j].vel.y = particles[j].vel.y + particles[j].acc.y; */
+            particles[j].vel.x = particles[j].vel.x + particles[j].acc.x;
+            particles[j].vel.y = particles[j].vel.y + particles[j].acc.y;
 
-            particles[j].pos.x = particles[j].pos.x + particles[j].vel.x*friction;
-            particles[j].pos.y = particles[j].pos.y + particles[j].vel.y*friction;
+            particles[j].pos.x += particles[j].vel.x*friction;
+            particles[j].pos.y += particles[j].vel.y*friction;
         }
 
         BeginDrawing();
